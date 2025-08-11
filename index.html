@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+    <!-- <script src="https://cdn.jsdelivr.net/npm/@headlessui/react@1.7.16/dist/headlessui.umd.min.js"></script> -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <title>Portfolio - Zeyad Yasser</title>
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideInFromTop {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        @keyframes slideInFromBottom {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        @keyframes slideInFromLeft {
+            from { transform: translateX(-50px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        @keyframes slideInFromRight {
+            from { transform: translateX(50px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .animate-fade-in {
+            animation: fadeIn 1s ease-in-out;
+        }
+        
+        .animate-slide-top {
+            animation: slideInFromTop 0.8s ease-out;
+        }
+        
+        .animate-slide-bottom {
+            animation: slideInFromBottom 0.8s ease-out;
+        }
+        
+        .animate-slide-left {
+            animation: slideInFromLeft 0.8s ease-out;
+        }
+        
+        .animate-slide-right {
+            animation: slideInFromRight 0.8s ease-out;
+        }
+        
+        .animate-pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        .blob {
+            animation: blob-animation 10s infinite alternate;
+        }
+        
+        @keyframes blob-animation {
+            0% { border-radius: 60% 40% 30% 70%/60% 30% 70% 40%; }
+            50% { border-radius: 30% 60% 70% 40%/50% 60% 30% 60%; }
+            100% { border-radius: 60% 40% 30% 70%/60% 30% 70% 40%; }
+        }
+        
+        .skill-bar-fill {
+            transition: width 1.5s ease-in-out;
+        }
+        
+        .hover-grow {
+            transition: transform 0.3s ease;
+        }
+        
+        .hover-grow:hover {
+            transform: scale(1.03);
+        }
+        
+        .btn-hover-effect {
+            transition: all 0.3s ease;
+            background-size: 200% auto;
+        }
+        
+        .btn-hover-effect:hover {
+            background-position: right center;
+        }
+        
+        @keyframes floating {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+
+        /* Mobile specific styles */
+        @media (max-width: 1023px) {
+            .mobile-logo {
+                display: flex;
+                justify-content: center;
+                margin-top: 2rem;
+                margin-bottom: 2rem;
+            }
+            .mobile-logo img {
+                height: 120px;
+                width: auto;
+            }
+            .mobile-content {
+                padding-top: 1rem;
+            }
+            
+            /* Ensure mobile menu button is visible */
+            .mobile-menu-button {
+                display: inline-flex !important;
+                z-index: 50;
+            }
+            
+            /* Mobile menu styles */
+            #mobile-menu {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.5);
+                z-index: 40;
+                display: none;
+            }
+            
+            #mobile-menu.active {
+                display: block;
+            }
+            
+            #mobile-menu-content {
+                position: fixed;
+                top: 0;
+                right: 0;
+                width: 80%;
+                max-width: 300px;
+                height: 100%;
+                background-color: white;
+                padding: 1rem;
+                box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+                transform: translateX(100%);
+                transition: transform 0.3s ease;
+                overflow-y: auto;
+            }
+            
+            #mobile-menu.active #mobile-menu-content {
+                transform: translateX(0);
+            }
+            
+            .mobile-menu-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding-bottom: 1rem;
+                border-bottom: 1px solid #eee;
+                margin-bottom: 1rem;
+            }
+            
+            .mobile-menu-links {
+                display: flex;
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .mobile-menu-links a {
+                padding: 0.75rem 1rem;
+                border-radius: 0.5rem;
+                color: #333;
+                font-weight: 500;
+            }
+            
+            .mobile-menu-links a:hover {
+                background-color: #f5f5f5;
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            #mobile-menu {
+                display: none !important;
+            }
+        }
+        </style>
+</head>
+<body class="overflow-x-hidden">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize AOS if it exists
+            if (typeof AOS !== 'undefined') {
+                AOS.init({
+                    duration: 800,
+                    easing: 'ease-in-out',
+                    once: true,
+                    mirror: false
+                });
+            }
+
+            // Mobile menu functionality
+            const menuBtn = document.getElementById('menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const closeMenuBtn = document.getElementById('close-menu-button');
+            
+            // Toggle menu when clicking the burger button
+            if (menuBtn && mobileMenu) {
+                menuBtn.addEventListener('click', function() {
+                    mobileMenu.classList.toggle('active');
+                    document.body.style.overflow = mobileMenu.classList.contains('active') ? 'hidden' : 'auto';
+                });
+            }
+            
+            // Close menu when clicking the close button
+            if (closeMenuBtn && mobileMenu) {
+                closeMenuBtn.addEventListener('click', function() {
+                    mobileMenu.classList.remove('active');
+                    document.body.style.overflow = 'auto';
+                });
+            }
+            
+            // Close menu when clicking outside
+            if (mobileMenu) {
+                mobileMenu.addEventListener('click', function(e) {
+                    if (e.target === mobileMenu) {
+                        mobileMenu.classList.remove('active');
+                        document.body.style.overflow = 'auto';
+                    }
+                });
+            }
+
+            // Close menu when clicking on any menu link
+            if (mobileMenu) {
+                const menuLinks = mobileMenu.querySelectorAll('a');
+                menuLinks.forEach(link => {
+                    link.addEventListener('click', function() {
+                        mobileMenu.classList.remove('active');
+                        document.body.style.overflow = 'auto';
+                    });
+                });
+            }
+
+            // Skill bars animation
+            function setupSkillBars() {
+                const skillBars = document.querySelectorAll('.skill-bar-fill');
+                if (skillBars.length === 0) return;
+
+                const animateSkillBars = () => {
+                    skillBars.forEach(bar => {
+                        const width = bar.getAttribute('data-width');
+                        if (width) {
+                            bar.style.width = width;
+                        }
+                    });
+                };
+
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            animateSkillBars();
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.5 });
+
+                const skillsSection = document.querySelector('#Skills');
+                if (skillsSection) {
+                    observer.observe(skillsSection);
+                }
+            }
+
+            // Initialize functions
+            setupSkillBars();
+        });
+    </script>
+
+    <div class="bg-white">
+      <header class="relative lg:absolute inset-x-0 top-0 z-50 animate-fade-in">
+        <nav aria-label="Global" class="flex items-center justify-between p-6 lg:px-8">
+          <div class="flex lg:flex-1">
+            <a href="#" class="-m-1.5 p-1.5 hover-grow hidden lg:block">
+              <span class="sr-only">Your Company</span>
+              <img src="./logo.png" alt="" class="h-16 w-auto" />
+            </a>
+          </div>
+          <div class="flex lg:hidden">
+            <button id="menu-btn" class="mobile-menu-button text-gray-700 focus:outline-none">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" 
+                   viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                      d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
+          </div>
+          <div class="hidden lg:flex lg:gap-x-12">
+            <a href="#About" class="text-sm/6 font-semibold text-gray-900 hover:text-indigo-600 transition-colors" data-aos="fade-down" data-aos-delay="100">about me</a>
+            <a href="#Education" class="text-sm/6 font-semibold text-gray-900 hover:text-indigo-600 transition-colors" data-aos="fade-down" data-aos-delay="200">education</a>
+            <a href="#Skills" class="text-sm/6 font-semibold text-gray-900 hover:text-indigo-600 transition-colors" data-aos="fade-down" data-aos-delay="300">Skills</a>
+            <a href="#Projects" class="text-sm/6 font-semibold text-gray-900 hover:text-indigo-600 transition-colors" data-aos="fade-down" data-aos-delay="400">Projects</a>
+            <a href="#service" class="text-sm/6 font-semibold text-gray-900 hover:text-indigo-600 transition-colors" data-aos="fade-down" data-aos-delay="500">service</a>
+            <a href="#contact" class="text-sm/6 font-semibold text-gray-900 hover:text-indigo-600 transition-colors" data-aos="fade-down" data-aos-delay="600">Contact</a>
+          </div>
+          <div class="hidden lg:flex lg:flex-1 lg:justify-end">
+          </div>
+        </nav>
+
+        <!-- Mobile Logo -->
+        <div class="mobile-logo lg:hidden">
+          <a href="#" class="-m-1.5 p-1.5 hover-grow">
+            <span class="sr-only">Your Company</span>
+            <img src="./logo.png" alt="" class="h-32 w-auto" />
+          </a>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden">
+          <div id="mobile-menu-content" class="bg-white">
+            <div class="mobile-menu-header">
+              <a href="#" class="flex items-center">
+                <img src="./logo.png" alt="" class="h-8 w-auto" />
+              </a>
+              <button id="close-menu-button" type="button" class="text-gray-500 hover:text-gray-700">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            <div class="mobile-menu-links">
+              <a href="#About" class="block">about me</a>
+              <a href="#Education" class="block">education</a>
+              <a href="#Skills" class="block">Skills</a>
+              <a href="#Projects" class="block">Projects</a>
+              <a href="#service" class="block">service</a>
+              <a href="#contact" class="block">Contact</a>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div class="relative isolate px-6 lg:px-8 mb-12 mobile-content">
+        <div aria-hidden="true" class="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80 floating">
+          <div style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)" class="relative left-[calc(50%-11rem)] aspect-1155/678 w-144.5 -translate-x-1/2 rotate-30 bg-linear-to-tr from-[#ff80b5] to-[#9089fc] opacity-30 sm:left-[calc(50%-30rem)] sm:w-288.75"></div>
+        </div>
+        <div class="mx-auto max-w-2xl lg:pt-52">
+          <div class="text-center mt-6" data-aos="fade-up">
+            <h1 class="text-5xl font-semibold tracking-tight text-balance text-gray-900 sm:text-7xl animate-slide-top">I'm Zeyad Yasser</h1>
+            <p class="mt-6 text-lg font-semibold text-pretty text-gray-950 sm:text-xl/8" data-aos="fade-up" data-aos-delay="100">Let's Take a Dive to Know Who is Zeyad</p>
+            <p class="mt-6 text-lg font-bold text-pretty text-gray-600 sm:text-xl/8" data-aos="fade-up" data-aos-delay="200">"Delivering reliable IT support, ensuring high-quality software through meticulous testing, and building effective, user-friendly Software solutions."</p>
+            <div class="mt-10 flex items-center justify-center gap-x-6" data-aos="fade-up" data-aos-delay="300">
+              <a href="#" class="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 transition-colors animate-pulse">Get started</a>
+            </div>
+          </div>
+        </div>
+        <div aria-hidden="true" class="absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-30rem)] floating">
+          <div style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)" class="relative left-[calc(50%+3rem)] aspect-1155/678 w-144.5 -translate-x-1/2 bg-linear-to-tr from-[#ff80b5] to-[#9089fc] opacity-30 sm:left-[calc(50%+36rem)] sm:w-288.75"></div>
+        </div>
+      </div>
+
+      <div class="bg-white">
+        <div class="mx-auto grid max-w-2xl grid-cols-1 items-center gap-x-8 gap-y-16 px-4 sm:px-6 lg:max-w-7xl lg:grid-cols-2 lg:px-8">
+          <div data-aos="fade-right">
+            <h2 id="About" class="text-3xl mb-4 font-bold tracking-tight text-gray-900 sm:text-5xl">About Me</h2>
+            <h2 class="text-lg leading-8 font-semibold tracking-tight text-gray-500 sm:text-lg">I'm a IT support specialist, software tester, and Software developer with a passion for delivering seamless digital experiences.
+            By providing reliable IT solutions, ensuring software quality through meticulous testing, and building responsive, user-friendly Softwares, I help businesses operate efficiently and connect better with their audiences. Whether it's resolving technical issues, eliminating software bugs, or creating impactful web solutions, I specialize in turning challenges into opportunities for growth. Let's work together to enhance your systems, improve performance, and bring your digital vision to life!</h2>
+
+            <p class="mt-8 text-lg font-bold leading-7 text-gray-600"> Here are a some of the services I provide:</p>
+
+            <ul class="mt-4 space-y-2 text-gray-700">
+              <li class="relative pl-6 before:content-arrow before:absolute before:left-0 text-lg font-semibold tracking-tight hover:text-indigo-600 transition-colors" data-aos="fade-right" data-aos-delay="100">
+                IT Support Specialist
+              </li>
+              <li class="relative pl-6 before:content-arrow before:absolute before:left-0 text-lg font-semibold tracking-tight hover:text-indigo-600 transition-colors" data-aos="fade-right" data-aos-delay="200">
+                Software Tester
+              </li>
+              <li class="relative pl-6 before:content-arrow before:absolute before:left-0 text-lg font-semibold tracking-tight hover:text-indigo-600 transition-colors" data-aos="fade-right" data-aos-delay="300">
+                Web Developer
+              </li>
+              <li class="relative pl-6 before:content-arrow before:absolute before:left-0 text-lg font-semibold tracking-tight hover:text-indigo-600 transition-colors" data-aos="fade-right" data-aos-delay="400">
+                Flutter Developer
+              </li>
+            </ul>
+          </div>
+          <div class="grid grid-cols-1 grid-rows-11 gap-4 sm:gap-6 lg:gap-8" data-aos="fade-left">
+            <img src="./ZEYAD.jpg" alt="Zeyad." class="p-20 rounded-lg blob hover-grow" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <section id="Education" class="bg-gray-50 py-10" data-aos="fade-up">
+      <div class="max-w-4xl mx-auto px-4">
+        <h2 class="text-3xl font-bold text-center mb-12">Education & Experience</h2>
+        <div class="relative border-l border-blue-500">
+          
+          <!-- Item 1 -->
+          <div class="mb-10 ml-6" data-aos="fade-right" data-aos-delay="100">
+            <span class="absolute -left-3 flex items-center justify-center w-6 h-6 bg-blue-500 rounded-full ring-8 ring-gray-50 animate-pulse"></span>
+            <time class="mb-1 ml-6 text-sm font-normal leading-none text-blue-500">2022 – 2026</time>
+            <h3 class="text-lg font-semibold text-gray-900">Bachelor's in Computer Science</h3>
+            <p class="text-base font-normal text-gray-500">
+              Faculty of Computers and Information, Egyptian Korean University for Industrial Technology and Energy<br>
+              Specializing in Software Engineering
+            </p>
+          </div>
+
+          <!-- Item 2 -->
+          <div class="mb-10 ml-6" data-aos="fade-right" data-aos-delay="200">
+            <span class="absolute -left-3 flex items-center justify-center w-6 h-6 bg-blue-500 rounded-full ring-8 ring-gray-50 animate-pulse"></span>
+            <time class="mb-1 ml-6 text-sm font-normal leading-none text-blue-500">2023</time>
+            <h3 class="text-lg font-semibold text-gray-900">C++ Development Intern</h3>
+            <p class="text-base font-normal text-gray-500">
+              Elzero Web School<br>
+              Learn the basics of C++, object-oriented programming, algorithms, and data structures.
+            </p>
+          </div>
+
+          <!-- Item 3 -->
+          <div class="mb-10 ml-6" data-aos="fade-right" data-aos-delay="300">
+            <span class="absolute -left-3 flex items-center justify-center w-6 h-6 bg-blue-500 rounded-full ring-8 ring-gray-50 animate-pulse"></span>
+            <time class="mb-1 ml-6 text-sm font-normal leading-none text-blue-500">2023</time>
+            <h3 class="text-lg font-semibold text-gray-900">Python Developer</h3>
+            <p class="text-base font-normal text-gray-500">
+              Elzero Web School<br>
+              Learn Python and Django Framework for Web Development
+            </p>
+          </div>
+
+          <!-- Item 4 -->
+          <div class="mb-10 ml-6" data-aos="fade-right" data-aos-delay="400">
+            <span class="absolute -left-3 flex items-center justify-center w-6 h-6 bg-blue-500 rounded-full ring-8 ring-gray-50 animate-pulse"></span>
+            <time class="mb-1 ml-6 text-sm font-normal leading-none text-blue-500">2025</time>
+            <h3 class="text-lg font-semibold text-gray-900">PHP</h3>
+            <p class="text-base font-normal text-gray-500">
+              Route Academy<br>
+              PHP language basics for developing websites and creating more than one project, including a project for the university
+            </p>
+          </div>
+
+          <!-- Item 5 -->
+          <div class="mb-10 ml-6" data-aos="fade-right" data-aos-delay="500">
+            <span class="absolute -left-3 flex items-center justify-center w-6 h-6 bg-blue-500 rounded-full ring-8 ring-gray-50 animate-pulse"></span>
+            <time class="mb-1 ml-6 text-sm font-normal leading-none text-blue-500">2026</time>
+            <h3 class="text-lg font-semibold text-gray-900">software Tester</h3>
+            <p class="text-base font-normal text-gray-500">
+              Egypt Digital Pioneers Initiative <br>
+              Software Testing Basics
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="Skills" class="bg-gray-50 py-10">
+      <div class="max-w-3xl mx-auto px-4" data-aos="fade-up">
+        <h2 class="text-3xl font-bold text-center mb-8">My Skills</h2>
+        
+        <!-- Skill Item -->
+        <div class="mb-6" data-aos="fade-up" data-aos-delay="100">
+          <div class="flex justify-between mb-1">
+            <span class="text-base font-medium text-gray-700">PHP</span>
+            <span class="text-sm font-medium text-gray-500">80%</span>
+          </div>
+          <div class="w-full bg-gray-200 rounded-full h-3">
+            <div class="skill-bar-fill bg-gradient-to-r from-blue-500 to-indigo-600 h-3 rounded-full" data-width="80%" style="width: 0;"></div>
+          </div>
+        </div>
+
+        <div class="mb-6" data-aos="fade-up" data-aos-delay="150">
+          <div class="flex justify-between mb-1">
+            <span class="text-base font-medium text-gray-700">C++</span>
+            <span class="text-sm font-medium text-gray-500">70%</span>
+          </div>
+          <div class="w-full bg-gray-200 rounded-full h-3">
+            <div class="skill-bar-fill bg-gradient-to-r from-blue-500 to-indigo-600 h-3 rounded-full" data-width="70%" style="width: 0;"></div>
+          </div>
+        </div>
+
+        <div class="mb-6" data-aos="fade-up" data-aos-delay="200">
+          <div class="flex justify-between mb-1">
+            <span class="text-base font-medium text-gray-700">Python</span>
+            <span class="text-sm font-medium text-gray-500">70%</span>
+          </div>
+          <div class="w-full bg-gray-200 rounded-full h-3">
+            <div class="skill-bar-fill bg-gradient-to-r from-blue-500 to-indigo-600 h-3 rounded-full" data-width="70%" style="width: 0;"></div>
+          </div>
+        </div>
+
+        <div class="mb-6" data-aos="fade-up" data-aos-delay="250">
+          <div class="flex justify-between mb-1">
+            <span class="text-base font-medium text-gray-700">JavaScript</span>
+            <span class="text-sm font-medium text-gray-500">60%</span>
+          </div>
+          <div class="w-full bg-gray-200 rounded-full h-3">
+            <div class="skill-bar-fill bg-gradient-to-r from-blue-500 to-indigo-600 h-3 rounded-full" data-width="60%" style="width: 0;"></div>
+          </div>
+        </div>
+
+        <div class="mb-6" data-aos="fade-up" data-aos-delay="300">
+          <div class="flex justify-between mb-1">
+            <span class="text-base font-medium text-gray-700">Tailwind CSS</span>
+            <span class="text-sm font-medium text-gray-500">90%</span>
+          </div>
+          <div class="w-full bg-gray-200 rounded-full h-3">
+            <div class="skill-bar-fill bg-gradient-to-r from-blue-500 to-indigo-600 h-3 rounded-full" data-width="90%" style="width: 0;"></div>
+          </div>
+        </div>
+
+        <div class="mb-6" data-aos="fade-up" data-aos-delay="350">
+          <div class="flex justify-between mb-1">
+            <span class="text-base font-medium text-gray-700">Java</span>
+            <span class="text-sm font-medium text-gray-500">70%</span>
+          </div>
+          <div class="w-full bg-gray-200 rounded-full h-3">
+            <div class="skill-bar-fill bg-gradient-to-r from-blue-500 to-indigo-600 h-3 rounded-full" data-width="70%" style="width: 0;"></div>
+          </div>
+        </div>
+
+        <div data-aos="fade-up" data-aos-delay="400">
+          <div class="flex justify-between mb-1">
+            <span class="text-base font-medium text-gray-700">QA</span>
+            <span class="text-sm font-medium text-gray-500">30%</span>
+          </div>
+          <div class="w-full bg-gray-200 rounded-full h-3">
+            <div class="skill-bar-fill bg-gradient-to-r from-blue-500 to-indigo-600 h-3 rounded-full" data-width="30%" style="width: 0;"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="Projects" class="py-16 bg-gray-50">
+      <div class="max-w-7xl mx-auto px-6">
+        <h2 class="text-3xl font-bold text-center mb-12" data-aos="fade-up">My Projects</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          
+          <!-- Project Card -->
+          <div class="bg-white rounded-2xl shadow-lg overflow-hidden transform transition duration-300 hover:-translate-y-2 hover:shadow-2xl hover-grow" data-aos="zoom-in" data-aos-delay="100">
+            <img src="./hotel.jpg" alt="Project Image" class="w-full h-48 object-cover">
+            <div class="p-6">
+              <h3 class="text-xl font-semibold mb-2">Hotel-Reservation-System</h3>
+              <p class="text-gray-600 text-sm mb-4">
+                A hotel reservation system that allows users to search, book, and pay for available rooms, and for employees to manage reservations, availability, and prices in real time.
+              </p>
+              <div class="flex flex-wrap gap-2 mb-4">
+                <span class="bg-blue-100 text-blue-600 text-xs font-medium px-3 py-1 rounded-full">HTML</span>
+                <span class="bg-blue-100 text-blue-600 text-xs font-medium px-3 py-1 rounded-full">Tailwind Css</span>
+                <span class="bg-blue-100 text-blue-600 text-xs font-medium px-3 py-1 rounded-full">JavaScript</span>
+                <span class="bg-blue-100 text-blue-600 text-xs font-medium px-3 py-1 rounded-full">PHP</span>
+              </div>
+              <a href="https://github.com/zeyad4a/Hotel-Reservation-System.git" class="block w-full text-center bg-gradient-to-r from-blue-500 to-indigo-500 text-white font-semibold py-2 rounded-lg shadow-md hover:opacity-90 transition btn-hover-effect">
+                View Details
+              </a>
+            </div>
+          </div>
+
+          <!-- Repeat for other projects -->
+          <div class="bg-white rounded-2xl shadow-lg overflow-hidden transform transition duration-300 hover:-translate-y-2 hover:shadow-2xl hover-grow" data-aos="zoom-in" data-aos-delay="200">
+            <img src="./kids.jpg" alt="Project Image" class="w-full h-48 object-cover">
+            <div class="p-6">
+              <h3 class="text-xl font-semibold mb-2">Educational Platform for children with special needs</h3>
+              <p class="text-gray-600 text-sm mb-4">
+                Interactive web app teaching programming basics through videos, games, and quizzes.
+              </p>
+              <div class="flex flex-wrap gap-2 mb-4">
+                <span class="bg-blue-100 text-blue-600 text-xs font-medium px-3 py-1 rounded-full">HTML</span>
+                <span class="bg-blue-100 text-blue-600 text-xs font-medium px-3 py-1 rounded-full">Tailwind Css</span>
+                <span class="bg-blue-100 text-blue-600 text-xs font-medium px-3 py-1 rounded-full">JavaScript</span>
+              </div>
+              <a href="https://zeyad4a.github.io/Children_speech_problems/" class="block w-full text-center bg-gradient-to-r from-blue-500 to-indigo-500 text-white font-semibold py-2 rounded-lg shadow-md hover:opacity-90 transition btn-hover-effect">
+                View Details
+              </a>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-2xl shadow-lg overflow-hidden transform transition duration-300 hover:-translate-y-2 hover:shadow-2xl hover-grow" data-aos="zoom-in" data-aos-delay="300">
+            <img src="./hms.jpg" alt="Project Image" class="w-full h-48 object-cover">
+            <div class="p-6">
+              <h3 class="text-xl font-semibold mb-2">Hospital Management System</h3>
+              <p class="text-gray-600 text-sm mb-4">
+                A hospital management system aims to organize and manage all hospital operations, such as patient registration, appointments, medical records, billing, and medical inventory, digitally and efficiently.
+              </p>
+              <div class="flex flex-wrap gap-2 mb-4">
+                <span class="bg-blue-100 text-blue-600 text-xs font-medium px-3 py-1 rounded-full">Html</span>
+                <span class="bg-blue-100 text-blue-600 text-xs font-medium px-3 py-1 rounded-full">Tailwind Css</span>
+                <span class="bg-blue-100 text-blue-600 text-xs font-medium px-3 py-1 rounded-full">JavaScript</span>
+                <span class="bg-blue-100 text-blue-600 text-xs font-medium px-3 py-1 rounded-full">Php</span>
+              </div>
+              <a href="https://github.com/zeyad4a/Hospital_Management_System.git" class="block w-full text-center bg-gradient-to-r from-blue-500 to-indigo-500 text-white font-semibold py-2 rounded-lg shadow-md hover:opacity-90 transition btn-hover-effect">
+                View Details
+              </a>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-2xl shadow-lg overflow-hidden transform transition duration-300 hover:-translate-y-2 hover:shadow-2xl hover-grow" data-aos="zoom-in" data-aos-delay="400">
+            <img src="./Online_Coaching.jpg" alt="Project Image" class="w-full h-48 object-cover">
+            <div class="p-6">
+              <h3 class="text-xl font-semibold mb-2">Online-Trining</h3>
+              <p class="text-gray-600 text-sm mb-4">
+              An online fitness training platform for gyms that allows trainers to provide workout and nutrition plans, stream live or recorded sessions, and track members' progress toward their fitness goals.          </p>
+              <div class="flex flex-wrap gap-2 mb-4">
+                <span class="bg-blue-100 text-blue-600 text-xs font-medium px-3 py-1 rounded-full">Html</span>
+                <span class="bg-blue-100 text-blue-600 text-xs font-medium px-3 py-1 rounded-full">Css</span>
+              </div>
+              <a href="https://zeyad4a.github.io/Onlin-Trining-Css-Html/" class="block w-full text-center bg-gradient-to-r from-blue-500 to-indigo-500 text-white font-semibold py-2 rounded-lg shadow-md hover:opacity-90 transition btn-hover-effect">
+                View Details
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="service" class="py-16 bg-gray-50">
+      <div class="container mx-auto px-6">
+        <h2 class="text-3xl font-bold text-center mb-12" data-aos="fade-up">My Services</h2>
+        <div class="grid md:grid-cols-4 gap-8">
+
+          <!-- IT Support Solution -->
+          <div class="bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition duration-300 hover-grow" data-aos="fade-up" data-aos-delay="100">
+            <div class="flex justify-center mb-4">
+              <svg class="w-12 h-12 text-blue-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v1m0 14v1m8-9h1M4 12H3m15.36 6.36l.7.7M6.34 6.34l-.7-.7m12.02 0l.7-.7M6.34 17.66l-.7.7M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+              </svg>
+            </div>
+            <h3 class="text-xl font-semibold text-center mb-2">IT Support Solution</h3>
+            <p class="text-gray-600 text-center">Providing reliable IT support solutions to ensure smooth operations and quick issue resolution.</p>
+          </div>
+
+          <!-- Software Tester -->
+          <div class="bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition duration-300 hover-grow" data-aos="fade-up" data-aos-delay="200">
+            <div class="flex justify-center mb-4">
+              <svg class="w-12 h-12 text-blue-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 7l9 4 9-4-9-4-9 4z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 17l9 4 9-4M3 12l9 4 9-4" />
+              </svg>
+            </div>
+            <h3 class="text-xl font-semibold text-center mb-2">Software Tester</h3>
+            <p class="text-gray-600 text-center">Performing manual and automated testing to ensure software quality and performance.</p>
+          </div>
+
+          <!-- Web Developer -->
+          <div class="bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition duration-300 hover-grow" data-aos="fade-up" data-aos-delay="300">
+            <div class="flex justify-center mb-4">
+              <svg class="w-12 h-12 text-blue-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M16 18l6-6-6-6M8 6l-6 6 6 6" />
+              </svg>
+            </div>
+            <h3 class="text-xl font-semibold text-center mb-2">Web Developer</h3>
+            <p class="text-gray-600 text-center">Building responsive and user-friendly websites using modern technologies and best practices.</p>
+          </div>
+
+          <!-- Flutter Developer -->
+          <div class="bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition duration-300 hover-grow" data-aos="fade-up" data-aos-delay="400">
+            <div class="flex justify-center mb-4">
+              <svg class="w-12 h-12 text-blue-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M14.752 11.168l-3.197-2.132a4 4 0 00-5.555 1.11L3 15.75V21h5.25l3.197-4.8a4 4 0 011.11-5.555l2.195-1.477z" />
+              </svg>
+            </div>
+            <h3 class="text-xl font-semibold text-center mb-2">Flutter Developer</h3>
+            <p class="text-gray-600 text-center">Creating high-performance cross-platform mobile apps with Flutter framework and modern UI/UX.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact" class="py-16 bg-gradient-to-br from-blue-50 to-blue-100">
+      <div class="container mx-auto px-6">
+        <h2 class="text-4xl font-bold text-center mb-12 text-blue-700" data-aos="fade-up">Contact Me</h2>
+        <div class="grid md:grid-cols-2 gap-10">
+
+          <!-- Contact Form -->
+          <div class="bg-white p-8 rounded-2xl shadow-lg hover:shadow-2xl transition duration-300 hover-grow" data-aos="fade-right">
+            <form class="space-y-5">
+              <input type="text" placeholder="Your Name" class="w-full p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-400 outline-none transition-all">
+              <input type="text" placeholder="Your Phone" class="w-full p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-400 outline-none transition-all">
+              <input type="email" placeholder="Your Email" class="w-full p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-400 outline-none transition-all">
+              <textarea placeholder="Your Message" rows="5" class="w-full p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-400 outline-none transition-all"></textarea>
+              <button type="submit" class="w-full bg-blue-500 text-white p-3 rounded-lg hover:bg-blue-600 transition btn-hover-effect">Send Message</button>
+            </form>
+          </div>
+
+          <!-- Get in Touch -->
+          <div class="bg-gradient-to-br from-blue-600 to-blue-800 text-white p-10 rounded-2xl shadow-lg hover:shadow-2xl transition duration-300 hover-grow" data-aos="fade-left">
+            <h3 class="text-3xl font-bold mb-8 border-b-2 border-blue-300 pb-3">Get in Touch</h3>
+            <div class="space-y-6 text-lg">
+
+              <!-- WhatsApp -->
+              <a href="https://wa.me/201024474059" target="_blank" class="flex items-center space-x-4 hover:text-blue-200 transition">
+                <svg class="w-8 h-8 text-green-400" fill="currentColor" viewBox="0 0 24 24"><path d="M20.52 3.48A11.93 11.93 0 0012 0C5.38 0 0 5.38 0 12c0 2.11.55 4.14 1.6 5.93L0 24l6.28-1.64A11.93 11.93 0 0012 24c6.62 0 12-5.38 12-12 0-3.2-1.25-6.21-3.48-8.52zM12 22a9.93 9.93 0 01-5.1-1.39l-.36-.21-3.73.98 1-3.64-.24-.37A9.92 9.92 0 012 12c0 5.52-4.48 10-10 10zm5.21-7.79c-.29-.15-1.72-.85-1.99-.94-.27-.1-.46-.15-.66.15-.19.29-.76.94-.93 1.14-.17.19-.34.21-.63.07-.29-.15-1.22-.45-2.32-1.44-.86-.77-1.44-1.72-1.61-2.01-.17-.29-.02-.45.13-.6.13-.13.29-.34.43-.51.14-.17.19-.29.29-.48.1-.19.05-.36-.02-.51-.07-.15-.66-1.59-.91-2.18-.24-.58-.49-.5-.66-.51h-.57c-.19 0-.51.07-.78.36-.27.29-1.02 1-1.02 2.44s1.05 2.83 1.19 3.02c.15.19 2.07 3.17 5.02 4.45.7.3 1.25.48 1.68.61.71.23 1.35.2 1.86.12.57-.09 1.72-.7 1.96-1.38.24-.67.24-1.24.17-1.38-.07-.13-.26-.21-.55-.36z"/></svg>
+                <span class="font-medium">WhatsApp: +20 102 447 4059</span>
+              </a>
+
+              <!-- Gmail -->
+              <a href="mailto:zeyady2233@gmail.com" class="flex items-center space-x-4 hover:text-blue-200 transition">
+                <svg class="w-8 h-8 text-red-400" fill="currentColor" viewBox="0 0 24 24"><path d="M20 4H4c-1.103 0-2 .897-2 2v12c0 1.103.897 2 2 2h16c1.103 0 2-.897 2-2V6c0-1.103-.897-2-2-2zm0 2l-8 5-8-5h16zm0 12H4V8l8 5 8-5v10z"/></svg>
+                <span class="font-medium">zeyady2233@gmail.com</span>
+              </a>
+
+              <!-- GitHub -->
+              <a href="https://github.com/zeyad4a" target="_blank" class="flex items-center space-x-4 hover:text-blue-200 transition">
+                <svg class="w-8 h-8 text-gray-200" fill="currentColor" viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.302 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577v-2.234c-3.338.724-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.09-.745.083-.729.083-.729 1.205.084 1.84 1.238 1.84 1.238 1.07 1.834 2.809 1.304 3.495.997.108-.774.417-1.304.76-1.604-2.665-.3-5.466-1.334-5.466-5.93 0-1.31.467-2.382 1.235-3.222-.124-.303-.535-1.523.116-3.176 0 0 1.008-.322 3.3 1.23a11.48 11.48 0 013.004-.404c1.02.005 2.046.138 3.004.404 2.292-1.552 3.3-1.23 3.3-1.23.652 1.653.241 2.873.118 3.176.77.84 1.234 1.912 1.234 3.222 0 4.609-2.804 5.625-5.476 5.92.43.37.823 1.102.823 2.222v3.293c0 .322.218.694.825.576C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+                <span class="font-medium">github.com/zeyad4a</span>
+              </a>
+
+              <!-- Phone -->
+              <div class="flex items-center space-x-4">
+                <svg class="w-8 h-8 text-blue-300" fill="currentColor" viewBox="0 0 24 24"><path d="M6.62 10.79a15.053 15.053 0 006.59 6.59l2.2-2.19a1 1 0 011.02-.24l4.28 1.04a1 1 0 01.51.95V20.5a1.5 1.5 0 01-1.5 1.5C9.94 22 3 14.06 3 5.5 3 4.67 3.67 4 4.5 4h2.41a1 1 0 01.95.51l1.04 4.28a1 1 0 01-.24 1.02l-2.19 2.2z"/></svg>
+                <span class="font-medium">01024474059</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+</body>
+</html>
